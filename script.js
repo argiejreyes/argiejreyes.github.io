@@ -12,10 +12,18 @@ var cebu = {lat: 10.3342947, lng: 123.8859381};
 function createMap() {
     map = new google.maps.Map(document.getElementById('map'), {
         center: cebu,
-        zoom: 13
+        zoom: 13,
+        mapTypeControl: true,
+        mapTypeControlOptions: {
+            style: google.maps.MapTypeControlStyle.DEFAULT,
+            position: google.maps.ControlPosition.TOP_LEFT
+        },
     });
 
-    infowindow = new google.maps.InfoWindow({ map: map });
+    infowindow = new google.maps.InfoWindow({ 
+        map: map,
+        maxWidth: 300
+    });
     
     drawingManager = new google.maps.drawing.DrawingManager({
         drawingMode: null,
@@ -41,9 +49,6 @@ function createMap() {
 
     directionsService = new google.maps.DirectionsService;
     directionsDisplay = new google.maps.DirectionsRenderer;
-
-    //call renderer to display directions
-    directionsDisplay.setMap(map);
 }
 
 function nearbySearchCallback(results, status) {
@@ -69,12 +74,27 @@ function createMarker(place) {
     });
 
     google.maps.event.addListener(marker, 'click', function() {
-        infowindow.setContent(place.name);
+        infowindow.setContent(generateInfoWindowContent(place));
         infowindow.open(map, this);
-        getDirectionsFromCurrentLocation(place);
+
+        var directionsLink = document.getElementById('directions-link');
+        if(directionsLink) {
+            directionsLink.onclick = function(event){ 
+                event.preventDefault();
+                displayUserCurrentLocation(place);
+            }
+        }
     });
 
     markers.push(marker);
+}
+
+function generateInfoWindowContent(place) {
+    var content = "<div class=\"resto-name\">" + place.name + "</div>";
+    content += "<p>" + place.vicinity + "</p>";
+    content += "<p>Total customer visits: </p>";
+    content += "<a id=\"directions-link\" class=\"directions-lbl\" href=\"#\">Get Directions</a>"; 
+    return content;
 }
 
 function drawingOverlayComplete(drawing){
@@ -106,28 +126,38 @@ function removeOverlayAndMarkers() {
         markers[i].setMap(null);
     }
     markers = [];
+
+    // remove any direction information
+    directionsDisplay.setMap(null);
 }
 
-function getDirectionsFromCurrentLocation(place) {
+function getDirectionsFromCurrentLocation(place, currentPosition) {
 
     // origin
-    //displayUserCurrentLocation();
-    var currentPosition = {
-        lat: 10.3195392,
-        lng: 123.9057695
+    originLocation = {
+        lat: currentPosition.coords.latitude,
+        lng: currentPosition.coords.longitude
     };
+    marker = new google.maps.Marker({
+        map : map,
+        position : originLocation
+    });
+    markers.push(marker);
 
     // destination
-    var destination = {
+    var destinationLocation = {
         lat: place.geometry.location.lat(),
         lng: place.geometry.location.lng()
     };
 
+    directionsDisplay.setMap(map);
+    directionsDisplay.setOptions( { suppressMarkers: true } );
+
     directionsService.route({
         // origin: document.getElementById('start').value,
-        origin: currentPosition,
+        origin: originLocation,
         // destination: marker.getPosition(),
-        destination: destination,
+        destination: destinationLocation,
         travelMode: 'DRIVING'
     }, function(response, status) {
         if (status === 'OK') {
@@ -140,21 +170,16 @@ function getDirectionsFromCurrentLocation(place) {
     var sasasa = place;
 }
 
-function displayUserCurrentLocation() {
+function displayUserCurrentLocation(place) {
     if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(showPosition);
+        navigator.geolocation.getCurrentPosition(function(position) {
+            getDirectionsFromCurrentLocation(place, position);
+        }, geolocationError, {enableHighAccuracy: true});
     } else { 
         window.alert("Error: The Geolocation service failed. \nYour browser doesn\'t support geolocation.");
      }
 }
 
-function showPosition(position) {
-    currentLocation = {
-        lat: position.coords.latitude,
-        lng: position.coords.longitude
-    };
-    marker = new google.maps.Marker({
-        map : map,
-        position : currentLocation
-    });
+function geolocationError(err) {
+    window.alert(err.message);
 } 

@@ -1,6 +1,25 @@
-html, body, #map {
+html, body, #map, p {
    height: 100%;
    margin: 0;
    padding: 0;
-   cursor: pointer !important;
+}
+
+.resto-name {
+   color: #282828;
+   font-size: 1.05em;
+   font-weight: 500;
+   margin: 0;
+   padding-bottom: 5px;
+}
+
+a.directions-lbl {
+   color: #427fed;
+}
+
+a.directions-lbl:link, a.directions-lbl:visited {
+   text-decoration: none
+}
+
+a.directions-lbl:hover, a.directions-lbl:active {
+   text-decoration: underline
 }
