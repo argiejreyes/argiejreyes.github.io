@@ -1,20 +1,54 @@
 <!DOCTYPE html>
 <html>
+
   <head>
     <title>Cebu Restaurants</title>
     <meta name="viewport" content="initial-scale=1.0">
     <meta charset="utf-8">
-
-  <!-- Stylesheets -->
+    
+    <!-- Stylesheets -->
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous">
   </head>
+  
   <body>
+    <div class="main-wrapper">
+      <div class="sidenav">
+        <div class="form-group">
+          <label for="cuisineDropdown">Select a Cuisine</label>
+          <select class="form-control" id="cuisineDropdown">
+            <option value="any">Any</option>
+            <option value="filipino">Filipino</option>
+            <option value="american">American</option>
+            <option value="british">British</option>
+            <option value="caribbean">Caribbean</option>
+            <option value="chinese">Chinese</option>
+            <option value="french">French</option>
+            <option value="greek">Greek</option>
+            <option value="indian">Indian</option>
+            <option value="italian">Italian</option>
+            <option value="japanese">Japanese</option>
+            <option value="mediterranean">Mediterranean</option>
+            <option value="mexican">Mexican</option>
+            <option value="moroccan">Moroccan</option>
+            <option value="spanish">Spanish</option>
+            <option value="thai">Thai</option>
+            <option value="turkish">Turkish</option>
+            <option value="vietnamese">Vietnamese</option>
+          </select>
+        </div>
+        <input type="submit" onclick="getSelectedValue()" class="btn btn-primary" value="Filter Results">
+      </div>
+      <div class="map-container">
+        <div id="map"></div> 
+      </div>
+    </div>
 
-    <div id="map"></div>
-
-  <!-- Google Maps scripts -->
-  <script src="script.js"></script>
+    <!-- Scripts -->
+    <script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha384-nvAa0+6Qg9clwYCGGPpDQLVpLNn0fRaROjHqs13t4Ggj3Ez50XnGQqc/r8MhnRDZ" crossorigin="anonymous"></script>
+    <script src="script.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha384-aJ21OjlMXNL5UyIl/XNwTMqvzeRMZH2w8c5cRVpzpU8Y5bApTppSuUkhZXN0VxHd" crossorigin="anonymous"></script>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBBm7yDOd2fkB00eG134qoHyNxtlzUTrY4&callback=createMap&libraries=places,drawing"
-    async defer></script>
+      async defer></script>
   </body>
 </html>

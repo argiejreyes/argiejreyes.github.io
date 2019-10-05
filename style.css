@@ -1,7 +1,26 @@
-html, body, #map, p {
+html, body, .main-wrapper, #map{
    height: 100%;
    margin: 0;
    padding: 0;
+}
+
+.sidenav {
+   height: 100%;
+   width: 250px;
+   position: fixed;
+   z-index: 1;
+   top: 0;
+   left: 0;
+   padding: 10px;
+   background-color: white;
+   overflow-x: hidden;
+   transition: 0.5s;
+   box-shadow: 0px 20px 10px grey;
+ }
+
+.map-container {
+   height: 100%;
+   margin-left: 250px;
 }
 
 .resto-name {
@@ -23,3 +42,16 @@ a.directions-lbl:link, a.directions-lbl:visited {
 a.directions-lbl:hover, a.directions-lbl:active {
    text-decoration: underline
 }
+
+ body .btn {
+   border-radius: 0;
+   padding: 10px 0;
+   width: 100%
+ }
+
+ body .btn-primary {
+   background-color: #4285f4;
+   border: none;
+   border-radius: 5px;
+   padding: 11px 15px;
+ }

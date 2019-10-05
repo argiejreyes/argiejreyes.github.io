@@ -12,7 +12,7 @@ var cebu = {lat: 10.3342947, lng: 123.8859381};
 function createMap() {
     map = new google.maps.Map(document.getElementById('map'), {
         center: cebu,
-        zoom: 13,
+        zoom: 14,
         mapTypeControl: true,
         mapTypeControlOptions: {
             style: google.maps.MapTypeControlStyle.DEFAULT,
@@ -41,17 +41,17 @@ function createMap() {
     
     var request = {
         location : cebu,
-        radius : 5000,
+        rankBy: google.maps.places.RankBy.DISTANCE,
         type : [ 'restaurant' ]
     };
     placesService = new google.maps.places.PlacesService(map);
-    placesService.nearbySearch(request, nearbySearchCallback);
+    placesService.nearbySearch(request, placesSearchCallback);
 
     directionsService = new google.maps.DirectionsService;
     directionsDisplay = new google.maps.DirectionsRenderer;
 }
 
-function nearbySearchCallback(results, status) {
+function placesSearchCallback(results, status) {
     if (status === google.maps.places.PlacesServiceStatus.OK) {
         markers = [];
         for (var i = 0; i < results.length; i++) {
@@ -91,8 +91,12 @@ function createMarker(place) {
 
 function generateInfoWindowContent(place) {
     var content = "<div class=\"resto-name\">" + place.name + "</div>";
-    content += "<p>" + place.vicinity + "</p>";
-    content += "<p>Total customer visits: </p>";
+
+    if(place.vicinity) {
+        content += "<p>" + place.vicinity + "</p>";
+    }
+
+    content += "<p>Total customer visits: " + calculateStoreVisitors(place) + "</p>";
     content += "<a id=\"directions-link\" class=\"directions-lbl\" href=\"#\">Get Directions</a>"; 
     return content;
 }
@@ -112,7 +116,7 @@ function drawingOverlayComplete(drawing){
         bounds: overlayBounds,
         type : [ 'restaurant' ]
     };
-    placesService.nearbySearch(request, nearbySearchCallback);
+    placesService.nearbySearch(request, placesSearchCallback);
 }
 
 function removeOverlayAndMarkers() {
@@ -154,9 +158,7 @@ function getDirectionsFromCurrentLocation(place, currentPosition) {
     directionsDisplay.setOptions( { suppressMarkers: true } );
 
     directionsService.route({
-        // origin: document.getElementById('start').value,
         origin: originLocation,
-        // destination: marker.getPosition(),
         destination: destinationLocation,
         travelMode: 'DRIVING'
     }, function(response, status) {
@@ -182,4 +184,30 @@ function displayUserCurrentLocation(place) {
 
 function geolocationError(err) {
     window.alert(err.message);
-} 
+}
+
+function getSelectedValue() {
+    var selectedVal = $("#cuisineDropdown").val();
+
+    if(selectedVal == "any") {
+        selectedVal = "";
+    }
+
+    textSearch(selectedVal);
+}
+
+function textSearch(keyword) {
+    removeOverlayAndMarkers();
+    var request = {
+        location : cebu,
+        rankBy: google.maps.places.RankBy.DISTANCE,
+        type : [ 'restaurant' ],
+        query : keyword
+    };
+    placesService.textSearch(request, placesSearchCallback);
+}
+
+function calculateStoreVisitors(place) {
+    var visitors = 0;
+    return visitors;
+}
