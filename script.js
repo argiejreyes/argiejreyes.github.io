@@ -36,6 +36,7 @@ function createMap() {
           ]
         },
     });
+
     drawingManager.setMap(map);
     google.maps.event.addListener(drawingManager, 'overlaycomplete', drawingOverlayComplete);
     
@@ -44,6 +45,7 @@ function createMap() {
         rankBy: google.maps.places.RankBy.DISTANCE,
         type : [ 'restaurant' ]
     };
+
     placesService = new google.maps.places.PlacesService(map);
     placesService.nearbySearch(request, placesSearchCallback);
 
@@ -65,11 +67,6 @@ function createMarker(place) {
     marker = new google.maps.Marker({
         map : map,
         position : place.geometry.location,
-        //label: {
-        //	color: '#282828',
-        //	fontWeight: 'bold',
-        //	text: place.name,
-        //},
         icon: 'https://www.google.com/maps/vt/icon/name=assets/icons/poi/tactile/pinlet_shadow-2-medium.png,assets/icons/poi/tactile/pinlet_outline_v2-2-medium.png,assets/icons/poi/tactile/pinlet-2-medium.png,assets/icons/poi/quantum/pinlet/restaurant_pinlet-2-medium.png&highlight=ff000000,ffffff,ea4335,ffffff&color=ff000000?scale=1'
     });
 
@@ -120,12 +117,12 @@ function drawingOverlayComplete(drawing){
 }
 
 function removeOverlayAndMarkers() {
-    // remove previous overlay
+    // remove previous overlay if any
     if (previousOverlay != null) {
         previousOverlay.setMap(null);
     }
 
-    // remove markers within overlay
+    // remove markers within overlay if any
     for (var i = 0; i < markers.length; i++) {
         markers[i].setMap(null);
     }
@@ -148,6 +145,7 @@ function getDirectionsFromCurrentLocation(place, currentPosition) {
         lat: currentPosition.coords.latitude,
         lng: currentPosition.coords.longitude
     };
+    // add marker for current location
     marker = new google.maps.Marker({
         map : map,
         position : originLocation
@@ -213,6 +211,8 @@ function textSearch(keyword) {
 
 function calculateStoreVisitors(place) {
     var visitors = 0;
+    // Google API regarding visitor count/popular times is not exposed 
+    // Possible alternative: use https://github.com/m-wrzr/populartimes
     return visitors;
 }
 
