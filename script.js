@@ -12,7 +12,7 @@ var cebu = {lat: 10.3342947, lng: 123.8859381};
 function createMap() {
     map = new google.maps.Map(document.getElementById('map'), {
         center: cebu,
-        zoom: 14,
+        zoom: 15,
         mapTypeControl: true,
         mapTypeControlOptions: {
             style: google.maps.MapTypeControlStyle.DEFAULT,
@@ -133,9 +133,15 @@ function removeOverlayAndMarkers() {
 
     // remove any direction information
     directionsDisplay.setMap(null);
+    removeDetailedDirections();
+}
+
+function removeDetailedDirections() {
+    document.getElementById("divDirections").innerHTML = "";
 }
 
 function getDirectionsFromCurrentLocation(place, currentPosition) {
+    removeDetailedDirections();
 
     // origin
     originLocation = {
@@ -154,22 +160,20 @@ function getDirectionsFromCurrentLocation(place, currentPosition) {
         lng: place.geometry.location.lng()
     };
 
-    directionsDisplay.setMap(map);
-    directionsDisplay.setOptions( { suppressMarkers: true } );
-
     directionsService.route({
         origin: originLocation,
         destination: destinationLocation,
         travelMode: 'DRIVING'
     }, function(response, status) {
         if (status === 'OK') {
+            directionsDisplay.setMap(map);
+            directionsDisplay.setOptions( { suppressMarkers: true } );
             directionsDisplay.setDirections(response);
+            directionsDisplay.setPanel(document.getElementById("divDirections"));           
         } else {
             window.alert('Directions request failed due to ' + status);
         }
     });
-
-    var sasasa = place;
 }
 
 function displayUserCurrentLocation(place) {
@@ -210,4 +214,8 @@ function textSearch(keyword) {
 function calculateStoreVisitors(place) {
     var visitors = 0;
     return visitors;
+}
+
+function displayAnalytics() {
+    
 }
